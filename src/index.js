@@ -12,11 +12,20 @@ const el = {
 };
 const { selector, loader, error, divCatInfo } = el;
 
-loader.classList.replace('loader', 'is-hidden');
-error.classList.add('is-hidden');
-divCatInfo.classList.add('is-hidden');
+function showLoader() {
+  loader.classList.remove('is-hidden');
+}
+
+function hideLoader() {
+  loader.classList.add('is-hidden');
+}
 
 let arrBreedsId = [];
+selector.classList.add('is-hidden'); // Приховуємо пустий селектор під час завантаження сторінки
+error.classList.add('is-hidden'); // Приховуємо пустий селектор під час завантаження сторінки
+
+showLoader(); // Показуємо лоадер при завантаженні сторінки
+
 fetchBreeds()
   .then(data => {
     data.forEach(element => {
@@ -26,20 +35,23 @@ fetchBreeds()
       select: selector,
       data: arrBreedsId,
     });
+    hideLoader(); // Приховуємо лоадер після заповнення селектора
+    selector.classList.remove('is-hidden'); // Показуємо заповнений селектор
   })
   .catch(onFetchError);
 
 selector.addEventListener('change', onSelectBreed);
 
 function onSelectBreed(event) {
-  loader.classList.replace('is-hidden', 'loader');
+  error.classList.add('is-hidden');
+  showLoader();
   selector.classList.add('is-hidden');
   divCatInfo.classList.add('is-hidden');
 
   const breedId = event.currentTarget.value;
   fetchCatByBreed(breedId)
     .then(data => {
-      loader.classList.replace('loader', 'is-hidden');
+      hideLoader();
       selector.classList.remove('is-hidden');
       const { url, breeds } = data[0];
 
@@ -58,7 +70,7 @@ function onSelectBreed(event) {
 
 function onFetchError(_error) {
   selector.classList.remove('is-hidden');
-  loader.classList.replace('loader', 'is-hidden');
+  hideLoader();
 
   Notify.warning(
     'Oops! Something went wrong! Try reloading the page or select another cat breed!'
