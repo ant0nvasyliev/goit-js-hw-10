@@ -21,10 +21,9 @@ function hideLoader() {
 }
 
 let arrBreedsId = [];
-selector.classList.add('is-hidden'); // Приховуємо пустий селектор під час завантаження сторінки
-error.classList.add('is-hidden'); // Приховуємо пустий селектор під час завантаження сторінки
-
-showLoader(); // Показуємо лоадер при завантаженні сторінки
+selector.classList.add('is-hidden');
+error.classList.add('is-hidden');
+showLoader();
 
 fetchBreeds()
   .then(data => {
